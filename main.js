@@ -6,6 +6,8 @@ rightWrist_x = 0;
 rightWrist_y = 0; 
 scoreleftWrist = 0;
 song_Peter_pan = "";
+scorerightWrist = 0;
+song_Harry_Potter_Theme = "";
 
 function preload() {
     peter_pan_song = loadSound("music2.mp3");
@@ -30,16 +32,30 @@ function draw() {
     stroke("#ff0000");
 
     song_Peter_pan = Peter_pan_song.isPlaying();
-    console.log(song_Peter_pan);
+    console.log("Peter Pan Song = "+song_Peter_pan);
 
-    if(scoreleftWrist > 0.02) {
+    song_Harry_Potter_Theme = Harry_potter_theme_song.isPlaying();
+    console.log("Harry Potter Theme Song = "+song_Harry_Potter_Theme);
+
+    if(scoreleftWrist > 0.02){
         circle(leftWrist_x, leftWrist_y,20);
         Harry_potter_theme_song.stop();
-        if(song_Peter_pan == false) {
+        if(song_Peter_pan == false){
             Peter_pan_song.play();
         }
         else{
             document.getElementById("song_id").innerHTML = "Song Name: Peter Pan Song";
+        }
+    }
+
+    if(scorerightWrist > 0.02){
+        circle(rightWrist_x, rightWrist_y,20);
+        Peter_pan_song.stop();
+        if(song_Harry_Potter_Theme == false){
+            Harry_potter_theme_song.play();
+        }
+        else{
+            document.getElementById("song_id").innerHTML = "Song Name: Harry Potter Theme Song";
         }
     }
 }
@@ -48,14 +64,15 @@ function modelLoaded() {
     console.log('PoseNet is Initialized');
 }
 
-function gotPoses(results)
-{
-    if(results.length > 0)
-    {
+function gotPoses(results){
+    if(results.length > 0){
         console.log(results);
 
         scoreleftWrist = results[0].pose.keypoints[9].score;
-        console.log(scoreleftWrist);
+        console.log("leftWrist_Score = "+scoreleftWrist);
+
+        scorerightWrist = results[0].pose.keypoints[10].score;
+        console.log("rightWrist_Score = "+scorerightWrist);
 
         leftWrist_x = results[0].pose.leftWrist.x;
         leftWrist_y = results[0].pose.leftWrist.y;
@@ -66,4 +83,3 @@ function gotPoses(results)
         console.log("rightWrist_x = " + rightWrist_x +" rightWrist_y = "+ rightWrist_y);
     }
 }
-
